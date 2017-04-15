@@ -1,20 +1,37 @@
-import React from 'react'
+import React, {Component} from 'react'
 import Message from '../Message'
+import $ from 'jquery'
 
-const MessageList = ({messages}) => {
-  return (
-    <div>
+class MessageList extends Component {
+
+  componentDidMount() {
+    const {actions} = this.props
+
+    $.ajax(
       {
-        messages.map(
-          (message) =>
-            <Message
-              key={message.id}
-              text={message.text}
-            />
-        )
+        type: 'GET',
+        url: '/api/messages',
+        success: ((data) => actions.createMessageList(data)),
       }
-    </div>
-  )
+    )
+  }
+
+  render() {
+    const {messages} = this.props
+    return (
+      <div>
+        {
+          messages.map(
+            (message) =>
+              <Message
+                key={message.id}
+                text={message.text}
+              />
+          )
+        }
+      </div>
+    )
+  }
 }
 
 export default MessageList
